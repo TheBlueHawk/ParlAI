@@ -32,8 +32,8 @@ from projects.roscoe.utils import (
 
 from parlai.core.params import ParlaiParser
 
-DEFAULT_INPUT_PATH = f"./projects/roscoe/roscoe_data/generated/"
-DEFAULT_OUTPUT_PATH = f"./projects/roscoe/scores/"
+DEFAULT_INPUT_PATH = f"../CausalLLMs/roscoe_exp/datasets/"
+DEFAULT_OUTPUT_PATH = f"../CausalLLMs/roscoe_exp/scores/"
 
 DATASETS = ["drop", "esnli", "cosmos", "gsm8k", "semeval"]
 
@@ -91,7 +91,7 @@ class ReasoningEvaluator(Evaluator):
                 context = ReasoningSteps(
                     line=jline["premise"] + " " + jline["hypothesis"]
                 )
-                if "gsm8k" in in_file:
+                if "gsm8k" or "causalbenchmark" in in_file:
                     context = ReasoningSteps(line=jline["premise"])
                     h_chain = ReasoningSteps(line=jline["gpt-3"], type="gsm8k_hypo")
                     r_chain = ReasoningSteps(line=jline["hypothesis"], type="gsm8k_ref")
@@ -223,7 +223,7 @@ if __name__ == '__main__':
                 evaluator.update_evaluator(os.path.join(root, filename))
                 score_types = (
                     REASONING_SCORES
-                    if "esnli" in filename or "gsm8k" in filename
+                    if "esnli" in filename or "gsm8k" in filename or "causalbenchmark" in filename
                     else UNSUPERVISED_SCORES
                 )
                 score_types = [st for st in score_types if st in opt['scores']]
